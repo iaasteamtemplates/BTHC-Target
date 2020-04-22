@@ -471,9 +471,6 @@
             ]
           }
         },
-    "AvailabilityZone": {
-      "Ref": "SubnetAZa"
-    },
     "DisableApiTermination": "false",
      "IamInstanceProfile": {
      "Ref": "bthec2profile"
