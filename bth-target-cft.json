@@ -96,7 +96,7 @@
       "Properties": {
         "GroupDescription": "WebApp security group",
         "VpcId": {
-          "Ref": "ProdVPC"
+          "Ref": "VpcId"
         },
         "SecurityGroupIngress": [
           {
