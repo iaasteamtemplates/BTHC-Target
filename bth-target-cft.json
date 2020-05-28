@@ -26,7 +26,11 @@
       "Description": "The default EC2 instance type is t2.large.",
       "Type": "String",
       "Default": "t2.large"
-    }
+    },
+	"CostCenter": {
+	  "Description": "Provide a cost center for cost tracking purposes.",
+	  "Type": "String"
+	}
   },
   "Mappings": {
     "RegionMap": {
@@ -95,6 +99,12 @@
       "Type": "AWS::EC2::SecurityGroup",
       "Properties": {
         "GroupDescription": "WebApp security group",
+		"Tags": [
+               {
+                  "Key": "CostCenter",
+                  "Value": {"Ref": "CostCenter"}
+               }
+        ],
         "VpcId": {
           "Ref": "VpcId"
         },
@@ -127,7 +137,13 @@
     "S3Bucket1": {
             "Type": "AWS::S3::Bucket",
             "Properties": {
-                "AccessControl": "Private"
+                "AccessControl": "Private",
+				"Tags": [
+					{
+					"Key": "CostCenter",
+					"Value": {"Ref": "CostCenter"}
+					}
+				]
                 }
             },
     "S3BucketPolicy1": {
@@ -165,8 +181,14 @@
         "S3Bucket2": {
           "Type": "AWS::S3::Bucket",
           "Properties": {
-              "AccessControl": "Private"
-              }
+              "AccessControl": "Private",
+			  "Tags": [
+					{
+					"Key": "CostCenter",
+					"Value": {"Ref": "CostCenter"}
+					}
+			  ]
+            }
           },
         "S3BucketPolicy2": {
           "Type": "AWS::S3::BucketPolicy",
@@ -205,7 +227,13 @@
           "Properties" : {
             "LoginProfile": {
               "Password": "AZkt5j8HbnM9zaybv8L9!"
-            }
+            },
+			"Tags": [
+               {
+                  "Key": "CostCenter",
+                  "Value": {"Ref": "CostCenter"}
+               }
+			]
           }
         },
         "bthlambdauserKeys" : {
@@ -217,7 +245,13 @@
         "bthec2role" : {
           "Type": "AWS::IAM::Role",
           "Properties": {
-            "RoleName" : "bthec2role", 
+            "RoleName" : "bthec2role",
+			"Tags": [
+               {
+                  "Key": "CostCenter",
+                  "Value": {"Ref": "CostCenter"}
+               }
+			], 
             "AssumeRolePolicyDocument": {
                 "Statement": [{
                    "Effect": "Allow",
@@ -320,7 +354,13 @@
                   "EC2_ACCESS_KEY_ID" : { "Ref" : "bthlambdauserKeys" },
                   "EC2_SECRET_KEY_ID" : { "Fn::GetAtt" : ["bthlambdauserKeys", "SecretAccessKey"]}
               }
-            }
+            },
+		"Tags": [
+               {
+                  "Key": "CostCenter",
+                  "Value": {"Ref": "CostCenter"}
+               }
+        ]
       }
   },
   "bthlambdaexecrole": {
@@ -328,6 +368,12 @@
     "Properties": {
         "AssumeRolePolicyDocument": {
             "Version": "2012-10-17",
+			"Tags": [
+               {
+                  "Key": "CostCenter",
+                  "Value": {"Ref": "CostCenter"}
+               }
+			],
             "Statement": [
                 {
                     "Effect": "Allow",
@@ -370,68 +416,6 @@
         ]
     }
 },
-      "bthwebapp1": {
-      "Type": "AWS::EC2::Instance",
-      "Properties": {
-        "ImageId": {
-          "Fn::If": [
-            "DetectAMI",
-            {
-              "Fn::FindInMap": [
-                "RegionMap",
-                {
-                  "Ref": "AWS::Region"
-                },
-				"AMIID"
-			  ]
-            },
-            {
-              "Ref": "AMI"
-            }
-          ]
-        },
-        "InstanceType": {
-          "Ref": "InstanceSize"
-        },
-        "Tags": [
-          {
-            "Key": "Name",
-            "Value": "bthwebapp1"
-          },
-          {
-            "Key": "env",
-            "Value": "prod"
-          },
-          {
-            "Key": "Type",
-            "Value": "web_app"
-          }
-        ],
-        "BlockDeviceMappings": [
-          {
-            "DeviceName": "/dev/xvda",
-            "Ebs": {
-              "VolumeSize": "8"
-            }
-          }
-        ],
-        "NetworkInterfaces": [
-          {
-            "AssociatePublicIpAddress": "True",
-            "DeleteOnTermination": "True",
-            "SubnetId": {
-              "Ref": "PrivateSubnetId"
-            },
-            "DeviceIndex": "0",
-            "GroupSet": [
-              {
-                "Ref": "WebappSG"
-              }
-            ]
-          }
-        ]
-      }
-    },
     "bthwebapp2": {
       "Type": "AWS::EC2::Instance",
       "Properties": {
@@ -487,6 +471,10 @@
       {
         "Key": "Type",
         "Value": "web_app"
+      },
+	  {
+        "Key": "CostCenter",
+        "Value": {"Ref": "CostCenter"}
       }
     ],
     "BlockDeviceMappings": [
