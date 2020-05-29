@@ -374,14 +374,14 @@
 		"bthlambdaexecrole": {
 			"Type": "AWS::IAM::Role",
 			"Properties": {
+				"Tags": [{
+					"Key": "CostCenter",
+					"Value": {
+						"Ref": "CostCenter"
+					}
+				}],
 				"AssumeRolePolicyDocument": {
 					"Version": "2012-10-17",
-					"Tags": [{
-						"Key": "CostCenter",
-						"Value": {
-							"Ref": "CostCenter"
-						}
-					}],
 					"Statement": [{
 						"Effect": "Allow",
 						"Principal": {
